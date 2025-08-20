@@ -1,0 +1,37 @@
+import numpy as np
+from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+
+
+mnist = fetch_openml('mnist_784', version=1)
+X, y = mnist.data / 255.0, mnist.target.astype(int)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+binary_mask_train = (y_train == 0) | (y_train == 1)
+binary_mask_test = (y_test == 0) | (y_test == 1)
+
+X_train_bin, y_train_bin = X_train[binary_mask_train], y_train[binary_mask_train]
+X_test_bin, y_test_bin = X_test[binary_mask_test], y_test[binary_mask_test]
+
+model_bin = LogisticRegression(max_iter=1000).fit(X_train_bin, y_train_bin) 
+
+y_pred_bin = model_bin.predict(X_test_bin)
+print("Binary Classification Report (0 vs 1):")
+print(classification_report(y_test_bin, y_pred_bin))
+
+model_multi = LogisticRegression(max_iter=1000, multi_class='ovr').fit(X_train, y_train)
+y_pred_multi = model_multi.predict(X_test)
+print("\nMulticlass Classification Report:")
+print(classification_report(y_test, y_pred_multi))
+
+conf_matrix = confusion_matrix(y_test, y_pred_multi)
+plt.imshow(conf_matrix, cmap="Blues", interpolation='nearest')
+plt.colorbar()
+plt.title("Confusion Matrix")
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+plt.show()
