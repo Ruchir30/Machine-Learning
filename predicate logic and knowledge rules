@@ -1,0 +1,29 @@
+# Predicate logic: Define facts about individuals
+people = {}
+
+# Accept user input for individuals
+def add_person():
+    name = input("Enter name: ")
+    income = input("Enter income level (low/medium/high): ")
+    credit_score = input("Enter credit score (poor/good): ")
+    employment = input("Are they employed? (yes/no): ")
+    people[name] = {"income": income, "credit_score": credit_score,
+                    "employment": employment}
+
+# Knowledge Rule: A person is eligible for a loan if:
+# 1. Income is high OR
+# 2. Credit score is good AND they are employed
+def is_eligible(name, data):
+    person = data.get(name, {})
+    return (person.get("income") == "high" or
+            (person.get("credit_score") == "good" and
+             person.get("employment") == "yes"))
+
+# Get number of people to input
+total_people = int(input("Enter number of people: "))
+for _ in range(total_people):
+    add_person()
+
+# Test the predicate logic
+for person in people:
+    print(f"{person} is eligible for loan: {is_eligible(person, people)}")
