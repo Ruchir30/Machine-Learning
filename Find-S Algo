@@ -1,0 +1,23 @@
+def find_s(data):
+    # Initialize the most specific hypothesis to the first positive example
+    hypothesis = data[0].copy()
+
+    for example in data:
+        if example[-1] == "Positive":
+            # Update the hypothesis to match the current example
+            for i in range(len(hypothesis) - 1):
+                if hypothesis[i] != example[i]:
+                    hypothesis[i] = "?"
+    return hypothesis
+
+# Sample dataset (attributes are for simplicity, the last column is the target class)
+data = [
+    ['Sunny', 'Warm', 'High', 'Strong', 'Positive'],
+    ['Sunny', 'Warm', 'High', 'Weak', 'Negative'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Positive'],
+    ['Rainy', 'Cold', 'High', 'Strong', 'Negative'],
+    ['Sunny', 'Warm', 'Low', 'Strong', 'Positive']
+]
+
+result = find_s(data)
+print("Find-S Hypothesis:", result)
